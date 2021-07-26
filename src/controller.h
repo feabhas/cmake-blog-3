@@ -1,6 +1,6 @@
 
 // -----------------------------------------------------------------------------
-// devices.h
+// controller.h
 //
 // DISCLAIMER:
 // Feabhas is furnishing this item "as is". Feabhas does not provide any
