@@ -17,6 +17,7 @@
 // services that may be provided by Feabhas.
 // -----------------------------------------------------------------------------
 
+#pragma once
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 

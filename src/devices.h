@@ -17,6 +17,7 @@
 // services that may be provided by Feabhas.
 // -----------------------------------------------------------------------------
 
+#pragma once
 #ifndef DEVICES_H
 #define DEVICES_H
 #include <cstdint>
