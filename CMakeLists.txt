@@ -41,8 +41,14 @@ target_include_directories(Application PRIVATE
   ${CMAKE_SOURCE_DIR}/include
 )
 
+set(LINKER_SCRIPTS 
+    ${CMAKE_SOURCE_DIR}/ldscripts/mem.ld 
+    ${CMAKE_SOURCE_DIR}/ldscripts/sections.ld
+)
+
 set_target_properties(Application PROPERTIES
     SUFFIX .elf
+    LINK_DEPENDS "${LINKER_SCRIPTS}"
 )
 
 target_link_options(Application PRIVATE
