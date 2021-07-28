@@ -25,6 +25,7 @@ add_compile_options(
 
 add_compile_definitions(
   $<$<CONFIG:DEBUG>:DEBUG>
+  $<$<BOOL:${USE_RTOS}>:RTOS>
 )
 
 add_executable(Application 
