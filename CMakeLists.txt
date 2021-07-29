@@ -58,12 +58,6 @@ target_link_options(Application PRIVATE
   LINKER:-Map,${CMAKE_CURRENT_BINARY_DIR}/Application.map
 )
 
-target_include_directories(Application PRIVATE
-  ${CMAKE_SOURCE_DIR}/src
-  ${CMAKE_SOURCE_DIR}/system/include
-  ${CMAKE_SOURCE_DIR}/system/include/cmsis
-)
-
 if (IS_DIRECTORY ${CMAKE_SOURCE_DIR}/system)
   add_subdirectory(system)
   target_link_libraries(Application PRIVATE system)
