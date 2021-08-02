@@ -18,7 +18,7 @@
 // -----------------------------------------------------------------------------
 
 #include <cstdint>
-#include "cmsis_device.h"
+
 #include "devices.h"
 
 // constexpr uint32_t GPIOD_BASE {0x40020C00u};
@@ -33,7 +33,7 @@ constexpr int led_end {11};
 
 void devices_init()
 {
-	uint32_t value {};
+    uint32_t value {};
     value = *AHB1_enable;
     value |= (0x1u << 3); 
     *AHB1_enable = value;
@@ -67,6 +67,55 @@ void devices_7seg_set(uint32_t value)
     gpio_set(GPIOD_out_r, value << led_start);
 }
 
+
+#ifdef RTOS
+
+#include "FreeRTOS.h"
+#include "task.h"
+
+#ifdef DEBUG
+#include <stdio.h>
+#include <stdlib.h>
+#endif
+
+// FreeRTOS hook callbacks
+
+extern "C" {
+
+void vApplicationTickHook(void)
+{
+}
+
+void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
+{
+#ifdef DEBUG
+    printf("assert failed %s:%ld\n", pcFileName, ulLine);
+#endif
+}
+
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char * pcTaskName )
+{
+    (void) xTask;
+#ifdef DEBUG
+    printf("stack overflow in task %s\n", pcTaskName);
+#endif
+    exit(1);
+}
+
+void vApplicationMallocFailedHook( void )
+{
+#ifdef DEBUG
+    printf("malloc failed\n");
+#endif
+    exit(1);   
+}
+
+}
+
+#else   
+
+#include "cmsis_device.h"
+
 static constexpr uint32_t TIMER_FREQUENCY_HZ {1000u};
 
 static uint32_t delay_count;
@@ -96,3 +145,6 @@ void SysTick_Handler(void)
         --delay_count;
     }
 }
+
+#endif
+

@@ -18,16 +18,56 @@
 // -----------------------------------------------------------------------------
 
 #include <cstdint>
+#include <cassert>
+#include <iostream>
 #include "controller.h"
 #include "devices.h"
+
+#ifdef RTOS
+#include "FreeRTOS.h"
+#include "task.h"
+#endif
 
 void controller_init()
 {
     devices_init();
 }
 
+
+
+#ifdef RTOS
+
+void controller_task(void *params)
+{
+    (void)(params);
+    unsigned int value = 0;
+    while(true)
+    {
+        devices_7seg_set(value);
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        value = (value != 15) ? value + 1 : 0;
+    }
+}
+
 void controller_start()
 {
+    std::cout << "Using RTOS" << std::endl;
+    BaseType_t status = xTaskCreate(controller_task,
+                           "Controller",
+                           1024 / sizeof(StackType_t),
+                           nullptr,
+                           0,
+                           nullptr);
+
+    assert(status == pdPASS);
+    vTaskStartScheduler();
+}
+
+#else
+
+void controller_start()
+{
+    std::cout << "Using bare metal" << std::endl;
     unsigned int value = 0;
     while(true)
     {
@@ -36,3 +76,5 @@ void controller_start()
         value = (value != 15) ? value + 1 : 0;
     }
 }
+
+#endif

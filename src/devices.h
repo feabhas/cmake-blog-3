@@ -24,7 +24,10 @@
 #include "cmsis_device.h"
 
 void devices_init();
-void devices_sleep(uint32_t t); 
 void devices_7seg_set(uint32_t value);
+
+#ifndef RTOS
+void devices_sleep(uint32_t t); 
+#endif
 
 #endif
