@@ -21,6 +21,9 @@
 
 #include "devices.h"
 
+namespace devices
+{
+
 // constexpr uint32_t GPIOD_BASE {0x40020C00u};
 
 static volatile uint32_t *const AHB1_enable {reinterpret_cast<uint32_t*>(0x40023830u)};
@@ -31,7 +34,7 @@ static volatile const uint32_t *const GPIOD_in_r {reinterpret_cast<uint32_t*>(GP
 constexpr int led_start {8};
 constexpr int led_end {11};
 
-void devices_init()
+void init()
 {
     uint32_t value {};
     value = *AHB1_enable;
@@ -61,12 +64,13 @@ inline void gpio_clear(volatile uint32_t *const port, uint32_t pattern)
     *port = value;
 }
 
-void devices_7seg_set(uint32_t value)
+void s7seg_set(uint32_t value)
 {
     gpio_clear(GPIOD_out_r, 0xFu << led_start);
     gpio_set(GPIOD_out_r, value << led_start);
 }
 
+}
 
 #ifdef RTOS
 
@@ -116,13 +120,16 @@ void vApplicationMallocFailedHook( void )
 
 #include "cmsis_device.h"
 
+namespace devices
+{
+
 static constexpr uint32_t TIMER_FREQUENCY_HZ {1000u};
 
 static uint32_t delay_count;
 
-void devices_sleep(uint32_t t)
+void sleep(uint32_t t)
 {
-    SysTick_Config(SystemCoreClock / TIMER_FREQUENCY_HZ);
+    ::SysTick_Config(SystemCoreClock / TIMER_FREQUENCY_HZ);
     delay_count = t;
 
     // Busy wait until the SysTick decrements the counter to zero.
@@ -132,6 +139,7 @@ void devices_sleep(uint32_t t)
     }
 }
 
+}
 // -----------------------------------------------------------------------------
 // CMSIS ISR Handler.  This function uses weak linkage
 // to override the default ISR handler (provided by CMSIS)
@@ -140,9 +148,9 @@ extern "C"
 void SysTick_Handler(void)
 {
     // Decrement to zero the counter used by the delay routine.
-    if (delay_count != 0)
+    if (devices::delay_count != 0)
     {
-        --delay_count;
+        --devices::delay_count;
     }
 }
 

@@ -23,11 +23,14 @@
 #include <cstdint>
 #include "cmsis_device.h"
 
-void devices_init();
-void devices_7seg_set(uint32_t value);
+namespace devices
+{
+void init();
+void s7seg_set(uint32_t value);
 
 #ifndef RTOS
-void devices_sleep(uint32_t t); 
+void sleep(uint32_t t); 
 #endif
+}
 
 #endif

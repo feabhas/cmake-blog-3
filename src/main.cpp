@@ -19,8 +19,8 @@
 
 #include "controller.h"
 
-int main(void)
+int main()
 {
-    controller_init();
-    controller_start();
+    controller::init();
+    controller::start();
 }

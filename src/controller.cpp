@@ -28,31 +28,34 @@
 #include "task.h"
 #endif
 
-void controller_init()
+namespace controller
 {
-    devices_init();
+
+void init()
+{
+    devices::init();
 }
 
 
 
 #ifdef RTOS
 
-void controller_task(void *params)
+void task(void *params)
 {
     (void)(params);
     unsigned int value = 0;
     while(true)
     {
-        devices_7seg_set(value);
+        devices::s7seg_set(value);
         vTaskDelay(1000 / portTICK_PERIOD_MS);
         value = (value != 15) ? value + 1 : 0;
     }
 }
 
-void controller_start()
+void start()
 {
     std::cout << "Using RTOS" << std::endl;
-    BaseType_t status = xTaskCreate(controller_task,
+    BaseType_t status = xTaskCreate(task,
                            "Controller",
                            1024 / sizeof(StackType_t),
                            nullptr,
@@ -65,16 +68,17 @@ void controller_start()
 
 #else
 
-void controller_start()
+void start()
 {
     std::cout << "Using bare metal" << std::endl;
     unsigned int value = 0;
     while(true)
     {
-        devices_7seg_set(value);
-        devices_sleep(1000);
+        devices::s7seg_set(value);
+        devices::sleep(1000);
         value = (value != 15) ? value + 1 : 0;
     }
 }
 
 #endif
+}

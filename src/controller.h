@@ -21,7 +21,10 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-void controller_init();
-void controller_start();
+namespace controller
+{
+void init();
+void start();
+}
 
 #endif
